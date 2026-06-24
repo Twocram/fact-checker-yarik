@@ -36,6 +36,8 @@ bun install
 ### 🌐 Сайт
 
 ```bash
+cp apps/web/.env.example apps/web/.env
+# VITE_API_URL=http://localhost:3000 для локального бота
 bun run dev:web
 ```
 
@@ -55,15 +57,25 @@ cp apps/bot/.env.example apps/bot/.env
 
 ```env
 BOT_TOKEN=123456:telegram-bot-token
+BOT_POLLING=true
 GROQ_API_KEY=groq-api-key
 GROQ_MODEL=llama-3.1-8b-instant
+WEB_ORIGIN=http://localhost:5173
 ```
 
-Запуск:
+Запуск бота:
 
 ```bash
 bun run dev:bot
 ```
+
+Только API для сайта без Telegram polling:
+
+```env
+BOT_POLLING=false
+```
+
+Это нужно, если бот уже запущен на Render с тем же `BOT_TOKEN`.
 
 ## 🧪 Проверки
 
@@ -86,7 +98,7 @@ bun run dev:bot
 ## ⚠️ Ограничения MVP
 
 - Бот использует Groq, если задан `GROQ_API_KEY`; иначе включается простая эвристика.
-- Сайт пока работает без backend/API, поэтому проверка на сайте демонстрационная.
+- Сайт использует `/api/check` бота, если задан `VITE_API_URL`; иначе включается простая эвристика.
 - Данные бота хранятся в памяти процесса.
 - SEO для сайта пока не добавлено: тестовая версия сделана как Vue SPA.
 

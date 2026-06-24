@@ -25,7 +25,7 @@ export async function askGroq(prompt: string) {
         { role: 'system', content: 'Ты помощник по медиаграмотности для школьников. Отвечай по-русски, кратко, уверенно там, где есть общеизвестные проверяемые факты. Не используй Markdown-разметку.' },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.2,
+      temperature: 0,
       max_tokens: 700,
     }),
   });

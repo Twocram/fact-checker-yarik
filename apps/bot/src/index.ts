@@ -1,12 +1,12 @@
 import { createBot } from './bot';
+import { startHttpServer } from './server';
 
 const token = Bun.env.BOT_TOKEN;
-if (!token)
-  throw new Error('BOT_TOKEN is required');
+const pollingEnabled = Bun.env.BOT_POLLING !== 'false';
 
-Bun.serve({
-  port: Number(Bun.env.PORT ?? 3000),
-  fetch: () => new Response('ok'),
-});
+startHttpServer();
 
-void createBot(token).start();
+if (token && pollingEnabled)
+  void createBot(token).start();
+else
+  console.warn('Telegram polling disabled. HTTP API is running only.');

@@ -5,21 +5,50 @@ import Button from '@/components/ui/Button.vue';
 import Card from '@/components/ui/Card.vue';
 import Textarea from '@/components/ui/Textarea.vue';
 
+const apiUrl = import.meta.env.VITE_API_URL as string | undefined;
 const text = shallowRef('');
-const checked = shallowRef(false);
+const result = shallowRef('');
+const loading = shallowRef(false);
 const flags = ['шок', 'срочно', 'скрывают', '100%', 'без доказательств', 'все знают'];
 
-const hits = computed(() => flags.filter(flag => text.value.toLowerCase().includes(flag)));
-const verdict = computed(() => {
-  if (!checked.value)
-    return '';
-  return hits.value.length
-    ? `Есть признаки недостоверности: ${hits.value.join(', ')}.`
-    : 'Явных признаков фейка по тестовым правилам не найдено. Нужна проверка по базе источников.';
-});
+const aiEnabled = computed(() => Boolean(apiUrl));
 
-function check() {
-  checked.value = true;
+async function check() {
+  loading.value = true;
+  result.value = '';
+
+  try {
+    result.value = apiUrl ? await checkWithApi(text.value) : heuristicCheck(text.value);
+  }
+  catch {
+    result.value = heuristicCheck(text.value);
+  }
+  finally {
+    loading.value = false;
+  }
+}
+
+async function checkWithApi(value: string) {
+  const response = await fetch(`${apiUrl}/api/check`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: value }),
+  });
+
+  if (!response.ok)
+    throw new Error('Check failed');
+
+  const data = await response.json() as { result: string };
+  return data.result;
+}
+
+function heuristicCheck(value: string) {
+  const hits = flags.filter(flag => value.toLowerCase().includes(flag));
+
+  if (!hits.length)
+    return '⚠️ AI недоступен. По тестовым правилам явных признаков фейка не найдено.';
+
+  return `⚠️ AI недоступен. Найдены признаки недостоверности: ${hits.join(', ')}. Проверь источник, дату, автора и подтверждения в независимых источниках.`;
 }
 </script>
 
@@ -39,17 +68,17 @@ function check() {
       </div>
     </div>
 
-    <div class="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
-      ⚠️ Сейчас это MVP без ИИ: проверка ищет учебные маркеры кликбейта и манипуляций.
+    <div class="rounded-xl px-4 py-3 text-sm shadow-sm" :class="aiEnabled ? 'bg-emerald-50 text-emerald-900' : 'bg-amber-50 text-amber-900'">
+      {{ aiEnabled ? '🤖 AI-разбор подключён через backend бота.' : '⚠️ AI не настроен для сайта: работает учебная проверка по маркерам.' }}
     </div>
 
     <Textarea v-model="text" placeholder="Например: Срочно! Это скрывают все СМИ..." />
-    <Button :disabled="!text.trim()" @click="check">
-      Проверить
+    <Button :disabled="!text.trim() || loading" @click="check">
+      {{ loading ? 'Проверяю…' : 'Проверить' }}
     </Button>
 
-    <p v-if="verdict" class="rounded-xl bg-slate-50 p-4 text-sm text-slate-700 text-pretty">
-      {{ verdict }}
+    <p v-if="result" class="whitespace-pre-line rounded-xl bg-slate-50 p-4 text-sm text-slate-700 text-pretty">
+      {{ result }}
     </p>
   </Card>
 </template>
