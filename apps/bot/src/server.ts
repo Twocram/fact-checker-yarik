@@ -1,39 +1,52 @@
 import { checkFact } from './services/factCheck';
 
-const corsHeaders = {
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-  'Access-Control-Allow-Origin': Bun.env.WEB_ORIGIN ?? '*',
-};
+const allowedOrigins = (Bun.env.WEB_ORIGIN ?? '*')
+  .split(',')
+  .map(origin => origin.trim().replace(/\/$/, ''));
 
 export function startHttpServer() {
   return Bun.serve({
     port: Number(Bun.env.PORT ?? 3000),
     async fetch(request) {
       const url = new URL(request.url);
+      const headers = corsHeaders(request);
 
       if (request.method === 'OPTIONS')
-        return new Response(null, { headers: corsHeaders });
+        return new Response(null, { status: 204, headers });
 
       if (url.pathname === '/api/check' && request.method === 'POST') {
         const { text } = await request.json() as { text?: string };
         if (!text?.trim())
-          return json({ error: 'Text is required' }, 400);
+          return json({ error: 'Text is required' }, headers, 400);
 
         const result = await checkFact(text.slice(0, 4000));
-        return json({ result });
+        return json({ result }, headers);
       }
 
-      return new Response('ok', { headers: corsHeaders });
+      return new Response('ok', { headers });
     },
   });
 }
 
-function json(data: unknown, status = 200) {
+function corsHeaders(request: Request) {
+  const origin = request.headers.get('Origin')?.replace(/\/$/, '');
+  const allowedOrigin = allowedOrigins.includes('*')
+    ? '*'
+    : origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+
+  return {
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Vary': 'Origin',
+  };
+}
+
+function json(data: unknown, headers: Record<string, string>, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
-      ...corsHeaders,
+      ...headers,
       'Content-Type': 'application/json',
     },
   });

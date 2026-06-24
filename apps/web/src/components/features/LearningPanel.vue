@@ -54,8 +54,8 @@ function setDifficulty(value: Difficulty) {
       </div>
     </div>
 
-    <div class="rounded-xl bg-indigo-50 px-4 py-3 text-sm text-indigo-950 shadow-sm">
-      🤖 ИИ пока не используется: задания и ответы заранее подготовлены для демонстрации механики.
+    <div class="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
+      Демо-данные: задания, правильные ответы и баллы пока зашиты в интерфейсе.
     </div>
 
     <div class="flex gap-2">

@@ -68,8 +68,8 @@ function heuristicCheck(value: string) {
       </div>
     </div>
 
-    <div class="rounded-xl px-4 py-3 text-sm shadow-sm" :class="aiEnabled ? 'bg-emerald-50 text-emerald-900' : 'bg-amber-50 text-amber-900'">
-      {{ aiEnabled ? '🤖 AI-разбор подключён через backend бота.' : '⚠️ AI не настроен для сайта: работает учебная проверка по маркерам.' }}
+    <div v-if="!aiEnabled" class="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
+      ⚠️ AI не настроен для сайта: работает учебная проверка по маркерам.
     </div>
 
     <Textarea v-model="text" placeholder="Например: Срочно! Это скрывают все СМИ..." />

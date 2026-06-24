@@ -51,9 +51,6 @@ const steps = [
           <p class="inline-flex rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm">
             🛡️ MVP сервиса против исторических фейков
           </p>
-          <p class="inline-flex rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-800 shadow-sm">
-            ⚠️ ИИ пока не подключён
-          </p>
         </div>
 
         <h1 class="max-w-3xl text-balance text-4xl font-black tracking-tight sm:text-6xl">
@@ -171,6 +168,9 @@ const steps = [
             </h2>
             <p class="text-sm text-slate-500">
               Мотивация играть и делиться результатом.
+            </p>
+            <p class="mt-2 inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800">
+              Демо-данные
             </p>
           </div>
         </div>

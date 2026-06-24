@@ -30,6 +30,10 @@ function send() {
       </div>
     </div>
 
+    <div class="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm">
+      Демо-режим: заявка пока не отправляется на сервер и не сохраняется в базе.
+    </div>
+
     <Textarea v-model="proposal" placeholder="Факт, источник и доказательства..." />
     <Button :disabled="!proposal.trim()" @click="send">
       Отправить
