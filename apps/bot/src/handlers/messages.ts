@@ -12,7 +12,8 @@ export function registerMessageHandlers(bot: Bot) {
 
     if (state.mode === 'checking') {
       state.mode = 'idle';
-      await ctx.reply(checkFact(ctx.message.text), { reply_markup: mainMenu });
+      await ctx.reply('Проверяю…');
+      await ctx.reply(await checkFact(ctx.message.text), { reply_markup: mainMenu });
       return;
     }
 

@@ -55,6 +55,8 @@ cp apps/bot/.env.example apps/bot/.env
 
 ```env
 BOT_TOKEN=123456:telegram-bot-token
+GEMINI_API_KEY=google-ai-studio-key
+GEMINI_MODEL=gemini-1.5-flash
 ```
 
 Запуск:
@@ -83,7 +85,8 @@ bun run dev:bot
 
 ## ⚠️ Ограничения MVP
 
-- Факт-чек пока эвристический, без реальной ИИ-модели.
+- Бот использует Gemini, если задан `GEMINI_API_KEY`; иначе включается простая эвристика.
+- Сайт пока работает без backend/API, поэтому проверка на сайте демонстрационная.
 - Данные бота хранятся в памяти процесса.
 - SEO для сайта пока не добавлено: тестовая версия сделана как Vue SPA.
 
