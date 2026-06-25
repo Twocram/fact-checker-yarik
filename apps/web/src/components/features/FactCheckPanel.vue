@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SearchCheck } from 'lucide-vue-next';
+import { LoaderCircle, SearchCheck } from 'lucide-vue-next';
 import { computed, shallowRef } from 'vue';
 import Button from '@/components/ui/Button.vue';
 import Card from '@/components/ui/Card.vue';
@@ -74,8 +74,13 @@ function heuristicCheck(value: string) {
 
     <Textarea v-model="text" placeholder="Например: Срочно! Это скрывают все СМИ..." />
     <Button :disabled="!text.trim() || loading" @click="check">
-      {{ loading ? 'Проверяю…' : 'Проверить' }}
+      {{ loading ? 'Проверяем факт…' : 'Проверить' }}
     </Button>
+
+    <div v-if="loading" class="flex items-center gap-3 rounded-xl bg-blue-50 p-4 text-sm text-blue-950">
+      <LoaderCircle class="size-5 animate-spin" />
+      <span>Проверяем факт и готовим короткий разбор…</span>
+    </div>
 
     <p v-if="result" class="whitespace-pre-line rounded-xl bg-slate-50 p-4 text-sm text-slate-700 text-pretty">
       {{ result }}
