@@ -1,0 +1,6 @@
+node_modules
+dist
+.git
+.env
+apps/web/dist
+apps/**/node_modules
