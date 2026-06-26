@@ -25,7 +25,7 @@ jobs:
             set -e
             cd "$VPS_PATH"
             git pull --ff-only
-            docker compose up -d --build
+            docker compose -p fact-checker-yarik up -d --build --remove-orphans
             docker image prune -f
           EOF
         env:

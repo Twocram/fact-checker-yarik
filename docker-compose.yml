@@ -1,3 +1,5 @@
+name: fact-checker-yarik
+
 services:
   bot:
     build:
