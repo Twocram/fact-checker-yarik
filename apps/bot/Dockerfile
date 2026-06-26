@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json bun.lock ./
 COPY apps/bot/package.json apps/bot/package.json
 
-RUN bun install --frozen-lockfile
+RUN bun install
 
 COPY apps/bot apps/bot
 
