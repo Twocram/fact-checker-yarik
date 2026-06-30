@@ -1,8 +1,8 @@
 import type { Bot } from 'grammy';
-import { mainMenu } from '../keyboards';
-import { getUserState } from '../state';
+import { mainMenu } from '../../shared/keyboards';
+import { getUserState } from '../../shared/userState';
 
-export function registerCommandHandlers(bot: Bot) {
+export function registerStartHandlers(bot: Bot): void {
   bot.command('start', async (ctx) => {
     getUserState(ctx);
     await ctx.reply(

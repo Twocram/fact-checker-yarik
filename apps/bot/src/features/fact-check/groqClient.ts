@@ -8,7 +8,7 @@ interface GroqResponse {
 
 const model = Bun.env.GROQ_MODEL ?? 'llama-3.1-8b-instant';
 
-export async function askGroq(prompt: string) {
+export async function askGroq(prompt: string): Promise<string | undefined> {
   const apiKey = Bun.env.GROQ_API_KEY;
   if (!apiKey)
     return;

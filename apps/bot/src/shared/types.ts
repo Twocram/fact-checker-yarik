@@ -1,5 +1,5 @@
 export type Difficulty = 'basic' | 'advanced';
-export type Mode = 'idle' | 'checking' | 'playing' | 'submitting';
+export type UserMode = 'idle' | 'checking' | 'playing' | 'submitting';
 
 export interface Task {
   id: string
@@ -10,7 +10,7 @@ export interface Task {
 }
 
 export interface UserState {
-  mode: Mode
+  mode: UserMode
   score: number
   difficulty?: Difficulty
   taskId?: string

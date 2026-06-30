@@ -1,8 +1,8 @@
-import { askGroq } from './groq';
+import { askGroq } from './groqClient';
 
 const redFlags = ['шок', 'срочно', 'скрывают', '100%', 'без доказательств', 'все знают'];
 
-export async function checkFact(text: string) {
+export async function checkFact(text: string): Promise<string> {
   const answer = await askGroq(buildPrompt(text));
   if (answer)
     return `🤖 Разбор Groq:\n\n${answer}`;
@@ -10,7 +10,7 @@ export async function checkFact(text: string) {
   return heuristicCheck(text);
 }
 
-function heuristicCheck(text: string) {
+function heuristicCheck(text: string): string {
   const lower = text.toLowerCase();
   const hits = redFlags.filter(flag => lower.includes(flag));
 
@@ -20,7 +20,7 @@ function heuristicCheck(text: string) {
   return `⚠️ Groq не подключён или временно недоступен. Найдены признаки недостоверности: ${hits.join(', ')}. Проверь источник, дату, автора и подтверждения в независимых источниках.`;
 }
 
-function buildPrompt(text: string) {
+function buildPrompt(text: string): string {
   return `Разбери подозрительную новость или утверждение для школьника.
 
 Сначала внимательно перепиши проверяемое утверждение своими словами, не меняя числа и смысл. Затем проверь именно его.

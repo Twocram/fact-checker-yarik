@@ -3,7 +3,7 @@ import type { UserState } from './types';
 
 const users = new Map<number, UserState>();
 
-export function getUserState(ctx: Context) {
+export function getUserState(ctx: Context): UserState | undefined {
   const id = ctx.from?.id;
   if (!id)
     return;
@@ -17,7 +17,7 @@ export function getUserState(ctx: Context) {
   return created;
 }
 
-export function getRating(limit = 10) {
+export function getRating(limit = 10): Array<[number, UserState]> {
   return [...users.entries()]
     .sort((a, b) => b[1].score - a[1].score)
     .slice(0, limit);

@@ -1,5 +1,5 @@
-import { createBot } from './bot';
-import { startHttpServer } from './server';
+import { createBot } from './app/createBot';
+import { startHttpServer } from './app/httpServer';
 
 const token = Bun.env.BOT_TOKEN;
 const pollingEnabled = Bun.env.BOT_POLLING !== 'false';

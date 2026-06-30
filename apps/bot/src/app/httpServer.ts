@@ -1,10 +1,10 @@
-import { checkFact } from './services/factCheck';
+import { checkFact } from '../features/fact-check/factCheckService';
 
 const allowedOrigins = (Bun.env.WEB_ORIGIN ?? '*')
   .split(',')
   .map(origin => origin.trim().replace(/\/$/, ''));
 
-export function startHttpServer() {
+export function startHttpServer(): ReturnType<typeof Bun.serve> {
   return Bun.serve({
     port: Number(Bun.env.PORT ?? 3000),
     async fetch(request) {
@@ -14,21 +14,24 @@ export function startHttpServer() {
       if (request.method === 'OPTIONS')
         return new Response(null, { status: 204, headers });
 
-      if (url.pathname === '/api/check' && request.method === 'POST') {
-        const { text } = await request.json() as { text?: string };
-        if (!text?.trim())
-          return json({ error: 'Text is required' }, headers, 400);
-
-        const result = await checkFact(text.slice(0, 4000));
-        return json({ result }, headers);
-      }
+      if (url.pathname === '/api/check' && request.method === 'POST')
+        return handleFactCheckRequest(request, headers);
 
       return new Response('ok', { headers });
     },
   });
 }
 
-function corsHeaders(request: Request) {
+async function handleFactCheckRequest(request: Request, headers: Record<string, string>): Promise<Response> {
+  const { text } = await request.json() as { text?: string };
+  if (!text?.trim())
+    return json({ error: 'Text is required' }, headers, 400);
+
+  const result = await checkFact(text.slice(0, 4000));
+  return json({ result }, headers);
+}
+
+function corsHeaders(request: Request): Record<string, string> {
   const origin = request.headers.get('Origin')?.replace(/\/$/, '');
   const allowedOrigin = allowedOrigins.includes('*')
     ? '*'
@@ -42,7 +45,7 @@ function corsHeaders(request: Request) {
   };
 }
 
-function json(data: unknown, headers: Record<string, string>, status = 200) {
+function json(data: unknown, headers: Record<string, string>, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
     headers: {

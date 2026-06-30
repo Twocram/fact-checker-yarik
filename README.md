@@ -17,10 +17,10 @@ apps/
   bot/
     data/          # учебные задания
     src/
-      handlers/   # команды, callback-и, сообщения
-      services/   # логика факт-чека и обучения
-      bot.ts      # сборка бота
-      index.ts    # entrypoint
+      app/         # сборка бота, HTTP API, роутинг сообщений
+      features/    # fact-check, learning, rating, submission, start
+      shared/      # типы, клавиатуры, in-memory state
+      index.ts     # entrypoint
   web/
     src/
       components/ # UI и feature-компоненты
